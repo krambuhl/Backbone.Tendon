@@ -1,49 +1,85 @@
-#Backbone.Fiber
+#Backbone.Tendon
 
-Backbone.Fiber is a small set of Backbone objects to quickly get off the ground.  It is a lightweight implimentation inspired by some good parts of Marionette and enough new parts to call it something new.
-
-
-##Backbone.Fiber.View
-
-A base view that defines an automatic renderer if templates are defined and close and render hooks. 
-
-###Methods
-
-- __close:__ closes and unbinds events from the view.
-- __setUI:__ Internal method.  Cache dom elements using the ui hash. Implemented using jQuery, but can be overwriten for use with a differnt selector engine.
-- __render:__ Internal method.  Render and set element object.  Implemented using handlebars and Template.js wrapper.  Can be overwritten with custom template engine implimentation.
-
-###Callbacks
-
-- __onClose:__ callback function to be called after the close function is called.
-- __onRender:__ callback function to be called after view has been initialized and rendered.
-
-###Options
-
-- __ui__: name value pairs of keys and jquery selectors.
-- __template:__ Function or String.  If template is a function, it will be run with options.globals and view model (if defined) in the render function.
+Backbone.Tendon is a small set of Backbone objects to quickly get off the ground.  It is a lightweight implimentation inspired by some good parts of Marionette with enough new parts to call it something new.
 
 
-Backbone.Fiber.Yield
+
+##Backbone.Tendon.View
+
+Tendon.View extends Backbone.View with a set of useful utility functions and common patterns for rending models and templates (if defined).  
+
+_By default the render method uses a precompiled handlebars configuration because it integrates into my grunt enivornmnet well, this function can be easily overwriten to use any templating language._
+
+__Methods__ 
+
+- close
+- setUI (Used Internally)
+- render (Used Internally)
+
+__Callbacks__ 
+
+- onClose (Function)
+- onRender (Function)
+
+__Options__ 
+
+- ui (Object)
+- template (Function/String)
+
+
+
+Backbone.Tendon.Yield
 ---------------
 
-Yield defines a basic interface for adding and removing child nodes.  
+Tendon.Yield defines a thin wrapper for adding and removing nested views.  Utilizes a CRUD like interface for managing child views.  All methods accept a callback option that is called after action has been complete. 
+
+_In the future, I think Tendon.Yield should be a promise based api as it would expose a more useful, convenient set of patterns_
+
+__Methods__
+
+- find (String/Function, options)
+- find (view, options)
+- findAll(options)
+- insert (String/Function, view, options)
+- insert (view, options)
+- update (view, String/Function, options)
+- update (String/Function, String/Function, options)
+- remove (view, options)
+- remove (String/Function, options)
+- removeAll (options)
+
+__Callbacks__
+
+- onInsert (Function)
+- onUpdate (Function)
+- onRemove (Function)
+
+__Options__
+
+- insertPosition: "before" or "after"
+
+__Events__
+
+- vent.on("yield:insert", function(yield, view))
+- vent.on("yield:update", function(yield, view))
+- vent.on("yield:remove", function(yield, view))
 
 
-Backbone.Fiber.Router
+Backbone.Tendon.AppRouter
 ---------------
 
-Fiber.Router is an method-based router that uses Backbone.Wreqw for messaging and deligating application state.
+Tendon.AppRouter is an method-based router that uses [Backbone.Wreqw](https://github.com/marionettejs/backbone.wreqr) for messaging and deligating application state.  This acts as an automatic message passer for a predefined set of methods.  Tendon.AppRouter can be used in conjunction with Tendon.Yeild to manage application state.
 
-###Methods
+__Methods__
 
-- __addMethod:__
-- __removeMethod:__
-- __addMethod:__
+- addMethod (String/Array)
+- removeMethod (String/Array)
 
-###Options
+__Options__ 
 
-- __methods:__
+- vent (Required)
+- methods (Object)
+- depth (Number)
 
 
 
