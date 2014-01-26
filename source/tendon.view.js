@@ -1,4 +1,5 @@
-Backbone.Tendon.View = (function() {
+var Tendon = Tendon || {};
+Tendon.View = (function() {
 	
 	return Backbone.View.extend({
         constructor: function(options) {

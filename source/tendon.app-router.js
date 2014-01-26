@@ -1,18 +1,24 @@
+var Tendon = Tendon || {};
 Tendon.AppRouter = (function(o) {
     'use strict';
 
     var options = {
-            App: undefined,
+            app: undefined, // should be the base view definition for your application
+            vent: undefined, // vent is the backbone.wreqw definition
             methods: ["main"],
+            defaultRoute: "main"
             depth = 7
         };
 
     return Backbone.Router.extend({
         initialize: function(o) {
-            app = new options.App();
-            app.router = this;
-
             _.extend(options, o);
+            options.vent = options.vent || Backbone.Wreqr.EventAggregator;
+
+            app = new options.app();
+            app.router = this;
+            app.vent = new options.vent();
+
         },
 
         addMethod: function() {
@@ -33,9 +39,9 @@ Tendon.AppRouter = (function(o) {
             }
 
             return routes;
-        })("nav"),
+        })("action"),
 
-        nav: function () {
+        action: function () {
             var routes = Backbone.history.fragment.split("/"),
                 queries = {};
 
@@ -54,10 +60,10 @@ Tendon.AppRouter = (function(o) {
             });
 
             routes = _.compact(routes);
-            routes = (routes.length > 0) ? routes : ["main"];
+            routes = (routes.length > 0) ? routes : [options.defaultRoute];
 
             _.defer(_.bind(function() {
-                app.vent.trigger("route:" + routes[0], routes, queries);
+                app.vent.trigger("route", routes, queries);
 
                 // if this isnt a known method,
                 // fire a unknown route event
@@ -65,12 +71,19 @@ Tendon.AppRouter = (function(o) {
                     app.vent.trigger("route:known", routes, queries);
                 } else {
                     app.vent.trigger("route:unknown", routes, queries);
-                }[]
+                }
+
+                app.vent.trigger("route:" + routes[0], routes, queries);
             }, this))/;
+        },
+
+        nav: function(route, trigger) {
+           this.navigate(route, { trigger: trigger || true });
         },
             
         isMethod: function(method) {
-            return _.contains(methods, method || "");
+            if (method === undefined) return false;
+            return _.contains(this.methods, method) || method == options.defaultRoute;
         }
     });
 }());

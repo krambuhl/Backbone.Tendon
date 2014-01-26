@@ -7,7 +7,7 @@ _By default the render method uses a precompiled handlebars configuration becaus
 
 ##Methods
 
-###close
+###view.close
 
 Closes and unbinds events from the view.  Fires onClose callback and Vent trigger when done.
 
@@ -24,20 +24,24 @@ Closes and unbinds events from the view.  Fires onClose callback and Vent trigge
     BrisketView.close();
 
 
-###setUI
+###view.setUI
 
 Internal method.  Cache dom elements using the ui hash. Implemented using jQuery, but can be overwriten for use with a differnt selector engine.
 
 
-###render
+###view.render
 
 Internal method.  Render and set element object.  Implemented using handlebars and Template.js wrapper.  Can be overwritten with custom template engine implimentation.
+
+###view.ui
+
+Name value pairs of keys and jquery selectors.
 
 ##Callbacks
 
 
 
-###onClose
+###view.onClose
 
 callback function to be called after the close function is called.
 
@@ -47,13 +51,9 @@ callback function to be called after the close function is called.
 callback function to be called after view has been initialized and rendered.
 
 
-###onShow
+###view.onShow
 
-callback function to be called after shown using Tendon.
-
-##Options
-
-__ui:__ name value pairs of keys and jquery selectors.
+Callback function to be called after a view is shown using Tendon.Yield  
 
 
 ###template

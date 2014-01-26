@@ -11,10 +11,5 @@ __Methods__
 __Options__ 
 
 - vent (Required)
-- methods (Object)
+- methods (String Array)
 - depth (Number)
-
-
-
-
-
