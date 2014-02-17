@@ -1,24 +1,22 @@
-var Tendon = Tendon || {};
 Tendon.AppRouter = (function(o) {
     'use strict';
 
     var options = {
-            app: undefined, // should be the base view definition for your application
-            vent: undefined, // vent is the backbone.wreqw definition
-            methods: ["main"],
-            defaultRoute: "main"
-            depth = 7
-        };
+        app: undefined, // should be the base view definition for your application
+        vent: undefined, // vent is the backbone.wreqw definition
+        methods: ["main"],
+        defaultRoute: "main",
+        depth: 7
+    };
 
     return Backbone.Router.extend({
         initialize: function(o) {
             _.extend(options, o);
             options.vent = options.vent || Backbone.Wreqr.EventAggregator;
 
-            app = new options.app();
+            app = this.app = new options.app();
+            app.vent = this.vent = new options.vent();
             app.router = this;
-            app.vent = new options.vent();
-
         },
 
         addMethod: function() {
@@ -32,7 +30,7 @@ Tendon.AppRouter = (function(o) {
         routes: (function(routerAction) {
             var routes = { "": routerAction };
 
-            for (var i = 0; i <= depth; i++) {
+            for (var i = 0; i <= options.depth; i++) {
                 var route = [];
                 for (var j = 0; j <= i; j++) route.push(":" + j)
                 routes[route.join("/") + "*"] = routerAction;
@@ -74,7 +72,7 @@ Tendon.AppRouter = (function(o) {
                 }
 
                 app.vent.trigger("route:" + routes[0], routes, queries);
-            }, this))/;
+            }, this));
         },
 
         nav: function(route, trigger) {

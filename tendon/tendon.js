@@ -1,0 +1,3 @@
+var Tendon = (function() {
+	return {};
+})();

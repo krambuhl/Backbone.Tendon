@@ -1,4 +1,3 @@
-var Tendon = Tendon || {};
 Tendon.JsonpCollection = (function(o) {
     'use strict';
     

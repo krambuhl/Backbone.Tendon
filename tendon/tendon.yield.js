@@ -44,7 +44,7 @@ Tendon.Yield = (function() {
                 return childViews[args[0].cid] || false;
 
             // f(name)
-            } else if () {
+            } else if (true) {
                 return childViews[args[0]];
 
             // f(func)
