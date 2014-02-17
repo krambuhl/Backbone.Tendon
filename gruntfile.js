@@ -6,14 +6,14 @@ module.exports = function(grunt) {
         concat: {
             build: {
                 src: 'tendon/**/*.js',
-                dest:'tendon.js'
+                dest:'backbone.tendon.js'
             },
         },
 
         uglify: {
             build: {
-                src: ['tendon.js'],
-                dest: 'tendon.min.js'
+                src: ['backbone.tendon.js'],
+                dest: 'backbone.tendon.min.js'
             }
         },
 
