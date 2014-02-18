@@ -5,7 +5,14 @@ module.exports = function(grunt) {
     grunt.initConfig({
         concat: {
             build: {
-                src: 'tendon/**/*.js',
+                src: [
+                    "tendon/tendon.js",
+                    "tendon/tendon.vein.js",
+                    "tendon/tendon.view.js",
+                    "tendon/tendon.yield.js",
+                    "tendon/tendon.composer.js",
+                    "tendon/tendon.jsonp-collection.js"
+                ],
                 dest:'backbone.tendon.js'
             },
         },

@@ -1,22 +1,15 @@
-Tendon.AppRouter = (function(o) {
+Tendon.MethodRouter = (function(o) {
     'use strict';
-
-    var options = {
-        app: undefined, // should be the base view definition for your application
-        vent: undefined, // vent is the backbone.wreqw definition
-        methods: ["main"],
-        defaultRoute: "main",
-        depth: 7
-    };
 
     return Backbone.Router.extend({
         initialize: function(o) {
-            _.extend(options, o);
-            options.vent = options.vent || Backbone.Wreqr.EventAggregator;
+            _.extend(this.options, {
+                methods: ["main"],
+                defaultRoute: "main",
+                depth: 7
+            }, o);
 
-            app = this.app = new options.app();
-            app.vent = this.vent = new options.vent();
-            app.router = this;
+            this.vein = this.options.vein || new Tendon.Vein();
         },
 
         addMethod: function() {
@@ -40,7 +33,8 @@ Tendon.AppRouter = (function(o) {
         })("action"),
 
         action: function () {
-            var routes = Backbone.history.fragment.split("/"),
+            var root = this,
+                routes = Backbone.history.fragment.split("/"),
                 queries = {};
 
             // crawl through the url fragment
@@ -61,17 +55,17 @@ Tendon.AppRouter = (function(o) {
             routes = (routes.length > 0) ? routes : [options.defaultRoute];
 
             _.defer(_.bind(function() {
-                app.vent.trigger("route", routes, queries);
+                this.vein.trigger("route", routes, queries);
 
                 // if this isnt a known method,
                 // fire a unknown route event
                 if (this.isMethod(routes[0])) {
-                    app.vent.trigger("route:known", routes, queries);
+                    this.vein.trigger("route:known", routes, queries);
                 } else {
-                    app.vent.trigger("route:unknown", routes, queries);
+                    this.vein.trigger("route:unknown", routes, queries);
                 }
 
-                app.vent.trigger("route:" + routes[0], routes, queries);
+                this.vein.trigger("route:" + routes[0], routes, queries);
             }, this));
         },
 

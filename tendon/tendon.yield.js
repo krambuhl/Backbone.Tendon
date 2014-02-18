@@ -1,30 +1,37 @@
 Tendon.Yield = (function() {
     'use strict';
 
-    var childViews = {};
     var options = {
         insertMethod: "append" // or "prepend"
     };
 
     return Tendon.View.extend({
-        tagName: "section",
-        className: "yield",
+        initialize: function(options) {
+            Tendon.View.prototype.initialize.call(this, options);
+
+            this.childViews = {};
+        },
+
+        _insert: function(name, view) {
+            if (this.childViews[name] === undefined) {
+                this.childViews[name] = view;
+                this.$el[options.insertMethod](view.el);      
+            } else {
+                this.replace(name, view);
+            }
+        },
 
         insert: function() {
-            var args = _.toArray(arguments),
-                options = _.last(args);
-
+            var args = _.toArray(arguments);
             // Function Overload
 
             // f(name, view)
             if (_.isString(args[0]) && args[1] instanceof Backbone.View) {
-                childViews[args[0]] = args[1];
-                this.$el[options.insertMethod](args[1].el);
+                this._insert(args[0], args[1]);
 
             // f(view)
             } else if (args[0] instanceof Backbone.View) {
-                childViews[args[0].cid] = args[0];
-                this.$el[options.insertMethod](args[0].el);
+                this._insert(args[0].cid, args[0]);
 
             // f(func) 
             // func is called with yield instance as context
@@ -34,18 +41,47 @@ Tendon.Yield = (function() {
         },
 
         find: function() {
-            var args = _.toArray(arguments),
-                options = _.last(args);
+            var args = _.toArray(arguments);
 
             // Function Overload
 
             // f(view)
             if (args[0] instanceof Backbone.View) {
-                return childViews[args[0].cid] || false;
+                return this.childViews[args[0].cid];
 
             // f(name)
             } else if (true) {
-                return childViews[args[0]];
+                return this.childViews[args[0]];
+
+            // f(func)
+            } else if (_.isFunction(args[0])) {
+                return args[0].call(this, options);
+            }
+        },
+
+        findAll: function() {
+            return _.map(this.childViews, function(view) {
+                return view;
+            });
+        },
+
+        _replace: function(name, view) {
+            this._remove(name);
+            this._insert(name, view);
+        },
+
+        replace: function() {
+            var args = _.toArray(arguments);
+
+            // Fucntion Overload
+
+            // f(view, view)
+            if (args[0] instanceof Backbone.View && args[1] instanceof Backbone.View) {
+                this._replace(args[0].cid, args[0]);
+
+            // f(name, view)
+            } else if (_.isString(args[0]) && args[1] instanceof Backbone.View) {
+                this._replace(args[0], args[0]);
 
             // f(func)
             } else if (_.isFunction(args[0])) {
@@ -53,21 +89,30 @@ Tendon.Yield = (function() {
             }
         },
 
-        findAll: function() {
-            return _.map(childViews, function(view) {
-                return view;
-            });
-        },
-
-        replace: function() {
-            var args = _.toArray(arguments),
-                options = _.last(args);
-
+        _remove: function(name, view) {
+            if (!_.isUndefined(this.childViews[name])) {
+                this.childViews[name].close();
+                delete this.childViews[name];
+            }
         },
 
         remove: function() {
-            var args = _.toArray(arguments),
-                options = _.last(args);
+            var args = _.toArray(arguments);
+
+            // Fucntion Overload
+
+            // f(view)
+            if (args[0] instanceof Backbone.View) {
+                this._remove(args[0].cid);
+
+            // f(name)
+            } else if (_.isString(args[0])) {
+                this._remove(args[0]);
+
+            // f(func)
+            } else if (_.isFunction(args[0])) {
+                args[0].call(this, options);
+            }
         },
 
         removeAll: function() {
@@ -76,13 +121,6 @@ Tendon.Yield = (function() {
                     view.close();
                 }
             });
-        },
-
-        yield: function(route, view) {
-            this.closeCurrent();
-
-            this.currentView = this[route + "View"] = this[route + "View"] || new view();
-            this.$el.html(this.currentView.el);
         }
     });
 }());
