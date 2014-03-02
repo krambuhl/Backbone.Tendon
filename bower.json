@@ -1,31 +1,30 @@
 {
-    "name": "Backbone.Tendon", 
-    "description": "A lightwieght set of Backbone objects to getting your applications stretching.", 
-    "homepage": "https://github.com/krambuhl/Backbone.Tendon",
-    "version": "0.1.0",
-    "license": "MIT", 
-
-    "main": "backbone.tendon.js", 
-    "authors": [
-        "Evan Krambuhl <thekrambuhl@gmail.com>"
-    ], 
-    "dependencies": {
-        "jquery": "~1.10.0",
-        "underscore": "~1.5.2",
-        "backbone": "~1.1.0"
-    },  
-    "ignore": [
-        "**/.*", 
-        "node_modules", 
-        "bower_components", 
-        "test", 
-        "tests"
-    ], 
-    "keywords": [
-        "Backbone", 
-        "Tendon", 
-        "Application", 
-        "Plugin"
-    ], 
-    "private": true
+  "name": "Backbone.Tendon",
+  "description": "A lightwieght set of Backbone objects to getting your applications stretching.",
+  "homepage": "https://github.com/krambuhl/Backbone.Tendon",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "backbone.tendon.js",
+  "authors": [
+    "Evan Krambuhl <thekrambuhl@gmail.com>"
+  ],
+  "dependencies": {
+    "jquery": "~1.10.0",
+    "underscore": "~1.5.2",
+    "backbone": "~1.1.0"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "Backbone",
+    "Tendon",
+    "Application",
+    "Plugin"
+  ],
+  "private": true
 }

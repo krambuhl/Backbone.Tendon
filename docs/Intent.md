@@ -1,34 +1,79 @@
 Backbone.Tendon Intents
 ======
 
-####Required Modules
 
-Component | Description | Status
---- | --- | ---
-Tendon | Namespace definition | Done, Closed
-Tendon.Vein | Message passer | Done, Closed
-Tendon.View | Base view class | Done, Open
-Tendon.Yield | Extends Tendon.View to manage child views | In-Progress
-Tendon.CollectionView | Extend Tendon.Yield/Tendon.View to list/item structure | Not Started
-Tendon.Composer | Application object | In-Progress
+Yield
+---
+
+_Extends Tendon.View_
+
+#####Intended Code
+
+```js
+
+// useage:
+MyApp.Yield = Tendon.Yield.extend();
+
+// add view to yield (named by view's cid)
+MyApp.Yield.insert(new MyApp.HeroView());
+
+// add view with a name to reference
+MyApp.Yield.insert("content", new MyApp.ContentView());
+
+// replace with new view
+MyApp.Yield.replace("content", new MyApp.NewContentView());
+
+// remove view by name
+MyApp.Yield.remove("content");
+
+```
 
 
-####Optional/Utility Modules
+###Todo
 
-Component | Description | Status
---- | --- | ---
-Tendon.JsonpCollection | Readonly jsonp collection | Done, Closed
+- Remove view by reference, even when added with a name string.
+- Replace should maintain order.
+- CRUD methods should fire off vein methods to self and child views
 
 
+Layout
+---
+
+_Uses Tendon.Yield_
+
+Layout is a view wrapper that creates a set Tendon.Yields of 
+
+#####Intended Code
+
+```js
+
+// useage:
+MyApp.AppLayout = Tendon.Layout.extend({
+    layout: {
+        header: ".l-header",
+        navigation: ".l-navigation",
+        content: ".l-content",
+        footer: ".l-footer",
+    }
+});
+
+// 
+
+```
+
+
+
+    
 
 Composer
 ---
 
 Composer is the application object, only one should be alive.  it is the primary messaging bus between router and application.  It follows a very typical site sctructure of /page/action/id.
 
-* Tendon.Composer (extends Tendon.Layout)
+* Tendon.Composer (extends Tendon.View)
     + Vien
     + Router
+
 
 #####Intended Code
 
@@ -76,40 +121,3 @@ Tendon.Composer.extend({
 });
 
 ```
-
-
-Layout
----
-
-Layout is a view wrapper for adding and removing child views.  Handles the 
-
-
-* Composer
-    + Vien
-    + Yield
-    + Router
-
-#####Intended Code
-
-```js
-
-// useage:
-MyApp.AppLayout = Tendon.Layout.extend({
-    block: {
-        header: ".l-header",
-        navigation: ".l-navigation",
-        content: ".l-content",
-        footer: ".l-navigation",
-    },
-
-});
-
-//definition:
-Tendon.Layout = Tendon.Yield.extend({
-
-    show
-});
-```
-
-
-

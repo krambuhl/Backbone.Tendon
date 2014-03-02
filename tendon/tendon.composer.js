@@ -6,10 +6,7 @@ Tendon.Composer = (function(o) {
 			Tendon.View.prototype.initialize.call(this, options);
 			
 			this.routes = this.options.routes || [this.options.defaultRoute || "main"];
-			this.defaultRoute = _.first(this.routes);
-
-			this.vein = this.options.vein || new Tendon.Vein();
-			this.yield = this.options.yield || new Tendon.Yield();
+			this.defaultRoute = this.routes[0];
 
 			this.initContainers();
 			this.initListeners();

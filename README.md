@@ -2,9 +2,9 @@
 
 Backbone.Tendon is a small set of Backbone objects to quickly get off the ground.  It is a lightweight implimentation inspired by some good parts of Marionette with enough new parts to call it something new.
 
-###Currently very WIP.  I am using it on a couple projects sucessfully, but they are only moderate in size and as such should be used with care on large scale builds.
+#####_Currently very WIP.  I am using it on a couple projects sucessfully, but they are only moderate in size and as such should be used with care on large scale builds._
 
-##Backbone.Tendon.View
+<!-- ##Backbone.Tendon.View
 
 Tendon.View extends Backbone.View with a set of useful utility functions and common patterns for rending models and templates (if defined).  
 
@@ -85,3 +85,4 @@ __Options__
 
 
 
+ -->

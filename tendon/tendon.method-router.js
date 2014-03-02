@@ -3,7 +3,7 @@ Tendon.MethodRouter = (function(o) {
 
     return Backbone.Router.extend({
         initialize: function(o) {
-            _.extend(this.options, {
+            this.options = _.extend({
                 methods: ["main"],
                 defaultRoute: "main",
                 depth: 7
@@ -20,17 +20,18 @@ Tendon.MethodRouter = (function(o) {
             options.methods = _.difference(options.methods, _.toArray(arguments));
         },
 
-        routes: (function(routerAction) {
+        routes: function() {
             var routes = { "": routerAction };
 
-            for (var i = 0; i <= options.depth; i++) {
+            for (var i = 0; i <= this.options.depth; i++) {
                 var route = [];
+                
                 for (var j = 0; j <= i; j++) route.push(":" + j)
-                routes[route.join("/") + "*"] = routerAction;
+                    routes[route.join("/") + "*"] = "action"; 
             }
 
             return routes;
-        })("action"),
+        },
 
         action: function () {
             var root = this,
@@ -75,7 +76,7 @@ Tendon.MethodRouter = (function(o) {
             
         isMethod: function(method) {
             if (method === undefined) return false;
-            return _.contains(this.methods, method) || method == options.defaultRoute;
+            return _.contains(this.methods, method) || method == this.options.defaultRoute;
         }
     });
 }());

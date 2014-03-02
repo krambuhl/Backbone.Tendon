@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>javascript unit tests</title>
+	<!-- qunit -->
+	<link href='library/qunit.css' rel='stylesheet' />
+	<script src="library/qunit.js"></script>
+	
+	<!-- Required Library -->
+	<script src="../bower_components/jquery/jquery.js"></script>
+	<script src="../bower_components/underscore/underscore-min.js"></script>
+	<script src="../bower_components/backbone/backbone.js"></script>
+
+	<!-- Library we are testing -->
+	<script src="../dist/backbone.tendon.js"></script>
+
+	<!-- Tests -->
+	<script src="tests/tendon.test.js"></script>	
+	<script src="tests/tendon.vein.test.js"></script>	
+	<script src="tests/tendon.view.test.js"></script>	
+	<script src="tests/tendon.yield.test.js"></script>	
+	<script src="tests/tendon.layout.test.js"></script>	
+
+</head>
+<body>
+	
+<div id="qunit"></div> <!-- QUnit fills this with results, etc -->
+<div id='qunit-fixture'></div> 
+<div id="qunit-workspace"></div>
+
+</body>
+</html>
