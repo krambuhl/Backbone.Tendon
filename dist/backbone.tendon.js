@@ -24,7 +24,7 @@ Tendon.MethodRouter = (function(o) {
         },
 
         routes: function() {
-            var routes = { "": routerAction };
+            var routes = { "": "action" };
 
             for (var i = 0; i <= this.options.depth; i++) {
                 var route = [];
