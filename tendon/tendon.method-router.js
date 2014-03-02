@@ -4,19 +4,19 @@ Tendon.MethodRouter = (function(o) {
     return Backbone.Router.extend({
         initialize: function(o) {
             this.options = _.extend({
-                methods: ["main"],
                 defaultRoute: "main"
             }, o);
 
+            this.methods = this.options.methods || ["main"];
             this.vein = this.options.vein || new Tendon.Vein();
         },
 
         addMethod: function() {
-            this.options.methods = _.union(this.options.methods, _.toArray(arguments)); 
+            this.methods = _.union(this.methods, _.toArray(arguments)); 
         },
 
         removeMethod: function() {
-            this.options.methods = _.difference(this.options.methods, _.toArray(arguments));
+            this.methods = _.difference(this.methods, _.toArray(arguments));
         },
 
         routes: function() {
