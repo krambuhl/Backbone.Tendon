@@ -5,25 +5,24 @@ Tendon.MethodRouter = (function(o) {
         initialize: function(o) {
             this.options = _.extend({
                 methods: ["main"],
-                defaultRoute: "main",
-                depth: 7
+                defaultRoute: "main"
             }, o);
 
             this.vein = this.options.vein || new Tendon.Vein();
         },
 
         addMethod: function() {
-            options.methods = _.union(options.methods, _.toArray(arguments)); 
+            this.options.methods = _.union(this.options.methods, _.toArray(arguments)); 
         },
 
         removeMethod: function() {
-            options.methods = _.difference(options.methods, _.toArray(arguments));
+            this.options.methods = _.difference(this.options.methods, _.toArray(arguments));
         },
 
         routes: function() {
             var routes = { "": "action" };
 
-            for (var i = 0; i <= this.options.depth; i++) {
+            for (var i = 0; i <= 10; i++) {
                 var route = [];
                 
                 for (var j = 0; j <= i; j++) route.push(":" + j)
@@ -53,7 +52,7 @@ Tendon.MethodRouter = (function(o) {
             });
 
             routes = _.compact(routes);
-            routes = (routes.length > 0) ? routes : [options.defaultRoute];
+            routes = (routes.length > 0) ? routes : [this.options.defaultRoute];
 
             _.defer(_.bind(function() {
                 this.vein.trigger("route", routes, queries);
@@ -76,7 +75,7 @@ Tendon.MethodRouter = (function(o) {
             
         isMethod: function(method) {
             if (method === undefined) return false;
-            return _.contains(this.methods, method) || method == this.options.defaultRoute;
+            return _.contains(this.options.methods, method) || method == this.options.defaultRoute;
         }
     });
 }());
