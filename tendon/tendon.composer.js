@@ -13,9 +13,11 @@ Tendon.Composer = (function(o) {
             });
 
 			this._initListeners();
-
-            this.children = options.children || this.children;
-            this.addChildren();
+            
+            this.vein.on("render", function() {
+                this.children = options.children || this.children;
+                this.addChildren();
+            });
         },
 
         _initListeners: function() {
