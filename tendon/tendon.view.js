@@ -14,6 +14,7 @@ Tendon.View = (function() {
             this.events = this.setupUIEvents(_.result(this, 'events'));
 
             this.vein.trigger("render:before", this, this.$el);
+            
             if (this.onBeforeRender && _.isFunction(this.onBeforeRender)) {
                 this.onBeforeRender(this, this.$el);
             }
@@ -25,11 +26,11 @@ Tendon.View = (function() {
                     this.initUI(this.ui);
                 }
 
+                this.vein.trigger("render", this, this.$el);
+
                 if (this.onRender && _.isFunction(this.onRender)) {
                     this.onRender(this, this.$el);
                 }
-
-                this.vein.trigger("render", this, this.$el);
             }, this));
         },
 

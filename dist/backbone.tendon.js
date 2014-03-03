@@ -123,6 +123,7 @@ Tendon.View = (function() {
             this.events = this.setupUIEvents(_.result(this, 'events'));
 
             this.vein.trigger("render:before", this, this.$el);
+            
             if (this.onBeforeRender && _.isFunction(this.onBeforeRender)) {
                 this.onBeforeRender(this, this.$el);
             }
@@ -134,11 +135,11 @@ Tendon.View = (function() {
                     this.initUI(this.ui);
                 }
 
+                this.vein.trigger("render", this, this.$el);
+
                 if (this.onRender && _.isFunction(this.onRender)) {
                     this.onRender(this, this.$el);
                 }
-
-                this.vein.trigger("render", this, this.$el);
             }, this));
         },
 
@@ -400,16 +401,16 @@ Tendon.Composer = (function(o) {
         initialize: function(options) {
             Tendon.Layout.prototype.initialize.call(this, options);
 
-			this.routes = this.options.routes || this.routes || ["main"];
+			this.routes = options.routes || this.routes || ["main"];
             this.router = new Tendon.MethodRouter({
                 methods: this.routes,
                 vein: this.vein,
-                defaultRoute: this.options.defaultRoute || this.routes[0]
+                defaultRoute: options.defaultRoute || this.routes[0]
             });
 
 			this._initListeners();
 
-            this.children = this.options.children || this.children;
+            this.children = options.children || this.children;
             this.addChildren();
         },
 
@@ -439,7 +440,9 @@ Tendon.Composer = (function(o) {
         addChildren: function() {
             var root = this;
             _.each(this.children, function(child, name) {
-                root.layout[name].insert(child);
+                if (root.layout[name]) {
+                    root.layout[name].insert(child);
+                } else { }
             });
         }
     });
