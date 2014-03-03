@@ -1,26 +1,51 @@
 Tendon.Composer = (function(o) {
     'use strict';
     
-    var Composer = Tendon.View.extend({ 
+    var Composer = Tendon.Layout.extend({ 
         initialize: function(options) {
-			Tendon.View.prototype.initialize.call(this, options);
-			
-			this.routes = this.options.routes || [this.options.defaultRoute || "main"];
-			this.defaultRoute = this.routes[0];
+            Tendon.Layout.prototype.initialize.call(this, options);
 
-			this.initContainers();
-			this.initListeners();
+			this.routes = this.options.routes || this.routes || ["main"];
+            this.router = new Tendon.MethodRouter({
+                methods: this.routes,
+                vein: this.vein,
+                defaultRoute: this.options.defaultRoute || this.routes[0]
+            });
+
+			this._initListeners();
+
+            this.children = this.options.children || this.children;
+            this.addChildren();
         },
 
-        initContainers: function() {
-        	
-        },
-
-        initListeners: function() {
+        _initListeners: function() {
         	var root = this;
-        	_.each(this.routes, function() { 
-        		root.vein.on("route:")
+        	_.each(this.routes, function(route) { 
+        		root.vein.on("route:" + route, function(routes, queries) {
+                    var cbName = "on" + Tendon.utl.strCapitalize(route),
+                        func = root.options[cbName] || root[cbName];
+
+                    if (_.isFunction(func)) {
+                        func.call(root, routes, queries);
+                    }
+                });
         	});
+
+            this.vein.on("route:unknown", function(routes, queries) {
+                var func = root.options.onUnknownRoute || root.onUnknownRoute;
+
+                if (_.isFunction(func)) {
+                    func.call(root, routes, queries);
+                }
+            });
+
+        },
+
+        addChildren: function() {
+            var root = this;
+            _.each(this.children, function(child, name) {
+                root.layout[name].insert(child);
+            });
         }
     });
 

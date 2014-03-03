@@ -7,13 +7,13 @@ module.exports = function(grunt) {
             build: {
                 src: [
                     "tendon/tendon.js",
+                    "tendon/tendon.utl.js",
                     "tendon/tendon.method-router.js",
                     "tendon/tendon.vein.js",
                     "tendon/tendon.view.js",
                     "tendon/tendon.yield.js",
                     "tendon/tendon.layout.js",
                     "tendon/tendon.composer.js",
-                    "tendon/composers/tendon.site-composer.js",
                     "tendon/tendon.jsonp-collection.js"
                 ],
                 dest:'dist/backbone.tendon.js'

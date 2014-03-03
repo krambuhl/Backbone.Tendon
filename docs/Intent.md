@@ -94,13 +94,6 @@ Tendon.Composer.extend({
     // will default to the first route defined
     defaultRoute: "blog"
 
-    // define the views/controllers` that are used when routes are fired
-    // name: [view, options] ==> controllers.name = new view(options)
-    controllers: { // default = {}
-        blog: [MyApp.BlogCollectionView, { collection: MyApp.BlogCollection }],
-        about: { view: MyApp.AboutView }
-    },
-
     // define views instances that will be yielded
     // during application's lifespan
     children: { // default: { }
@@ -115,7 +108,7 @@ Tendon.Composer.extend({
     layout: {
         header: ".js-yield-header",
         navigation: ".js-yield-navigation",
-        "@controller": ".js-yield-page",
+        content: ".js-yield-page",
         footer: ".js-yield-footer"
     }
 });

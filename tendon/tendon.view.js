@@ -1,19 +1,22 @@
 Tendon.View = (function() {
     return Backbone.View.extend({
         initialize: function(options) {
+            Backbone.View.prototype.initialize.apply(this, arguments);
 
             // options overright extended behavior
             _.extend(this, {
-                vein: this.vein || new Tendon.Vein(),
-                model: this.model || new Backbone.Model()
+                vein: _.result(this, 'vein') || new Tendon.Vein(),
+                model: _.result(this, 'model') || new Backbone.Model()
             }, options);
 
-            
+            this.options = options;
+
             this.events = this.setupUIEvents(_.result(this, 'events'));
 
-            var args = _.toArray(arguments);
-            Backbone.View.prototype.constructor.apply(this, args);
-
+            this.vein.trigger("render:before", this, this.$el);
+            if (this.onBeforeRender && _.isFunction(this.onBeforeRender)) {
+                this.onBeforeRender(this, this.$el);
+            }
 
             this.render(this.model);
 
@@ -71,7 +74,6 @@ Tendon.View = (function() {
             if (typeof(hash) === "undefined") {
                 return;
             }
-
 
             _.each(_.keys(hash), function(v) {
                 var split = v.split("@ui.");

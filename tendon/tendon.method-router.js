@@ -7,7 +7,7 @@ Tendon.MethodRouter = (function(o) {
                 defaultRoute: "main"
             }, o);
 
-            this.methods = this.options.methods || ["main"];
+            this.methods = this.options.methods || [this.options.defaultRoute];
             this.vein = this.options.vein || new Tendon.Vein();
         },
 
@@ -19,7 +19,7 @@ Tendon.MethodRouter = (function(o) {
             this.methods = _.difference(this.methods, _.toArray(arguments));
         },
 
-        routes: function() {
+        routes: (function() {
             var routes = { "": "action" };
 
             for (var i = 0; i <= 10; i++) {
@@ -30,7 +30,7 @@ Tendon.MethodRouter = (function(o) {
             }
 
             return routes;
-        },
+        })(),
 
         action: function () {
             var root = this,

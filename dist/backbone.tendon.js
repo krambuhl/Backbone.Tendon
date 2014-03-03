@@ -1,28 +1,37 @@
 var Tendon = (function() {
 	return {};
 })();
+Tendon.utl = (function() {
+	return {
+		strCapitalize: function(str) {
+			return str.replace(/^./, function (char) {
+        		return char.toUpperCase();
+		    });
+		}
+	}
+})();
 Tendon.MethodRouter = (function(o) {
     'use strict';
 
     return Backbone.Router.extend({
         initialize: function(o) {
             this.options = _.extend({
-                methods: ["main"],
                 defaultRoute: "main"
             }, o);
 
+            this.methods = this.options.methods || [this.options.defaultRoute];
             this.vein = this.options.vein || new Tendon.Vein();
         },
 
         addMethod: function() {
-            this.options.methods = _.union(this.options.methods, _.toArray(arguments)); 
+            this.methods = _.union(this.methods, _.toArray(arguments)); 
         },
 
         removeMethod: function() {
-            this.options.methods = _.difference(this.options.methods, _.toArray(arguments));
+            this.methods = _.difference(this.methods, _.toArray(arguments));
         },
 
-        routes: function() {
+        routes: (function() {
             var routes = { "": "action" };
 
             for (var i = 0; i <= 10; i++) {
@@ -33,7 +42,7 @@ Tendon.MethodRouter = (function(o) {
             }
 
             return routes;
-        },
+        })(),
 
         action: function () {
             var root = this,
@@ -101,19 +110,22 @@ Tendon.Vein = (function(o) {
 Tendon.View = (function() {
     return Backbone.View.extend({
         initialize: function(options) {
+            Backbone.View.prototype.initialize.apply(this, arguments);
 
             // options overright extended behavior
             _.extend(this, {
-                vein: this.vein || new Tendon.Vein(),
-                model: this.model || new Backbone.Model()
+                vein: _.result(this, 'vein') || new Tendon.Vein(),
+                model: _.result(this, 'model') || new Backbone.Model()
             }, options);
 
-            
+            this.options = options;
+
             this.events = this.setupUIEvents(_.result(this, 'events'));
 
-            var args = _.toArray(arguments);
-            Backbone.View.prototype.constructor.apply(this, args);
-
+            this.vein.trigger("render:before", this, this.$el);
+            if (this.onBeforeRender && _.isFunction(this.onBeforeRender)) {
+                this.onBeforeRender(this, this.$el);
+            }
 
             this.render(this.model);
 
@@ -171,7 +183,6 @@ Tendon.View = (function() {
             if (typeof(hash) === "undefined") {
                 return;
             }
-
 
             _.each(_.keys(hash), function(v) {
                 var split = v.split("@ui.");
@@ -385,32 +396,56 @@ Tendon.Layout = (function() {
 Tendon.Composer = (function(o) {
     'use strict';
     
-    var Composer = Tendon.View.extend({ 
+    var Composer = Tendon.Layout.extend({ 
         initialize: function(options) {
-			Tendon.View.prototype.initialize.call(this, options);
-			
-			this.routes = this.options.routes || [this.options.defaultRoute || "main"];
-			this.defaultRoute = this.routes[0];
+            Tendon.Layout.prototype.initialize.call(this, options);
 
-			this.initContainers();
-			this.initListeners();
+			this.routes = this.options.routes || this.routes || ["main"];
+            this.router = new Tendon.MethodRouter({
+                methods: this.routes,
+                vein: this.vein,
+                defaultRoute: this.options.defaultRoute || this.routes[0]
+            });
+
+			this._initListeners();
+
+            this.children = this.options.children || this.children;
+            this.addChildren();
         },
 
-        initContainers: function() {
-        	
-        },
-
-        initListeners: function() {
+        _initListeners: function() {
         	var root = this;
-        	_.each(this.routes, function() { 
-        		root.vein.on("route:")
+        	_.each(this.routes, function(route) { 
+        		root.vein.on("route:" + route, function(routes, queries) {
+                    var cbName = "on" + Tendon.utl.strCapitalize(route),
+                        func = root.options[cbName] || root[cbName];
+
+                    if (_.isFunction(func)) {
+                        func.call(root, routes, queries);
+                    }
+                });
         	});
+
+            this.vein.on("route:unknown", function(routes, queries) {
+                var func = root.options.onUnknownRoute || root.onUnknownRoute;
+
+                if (_.isFunction(func)) {
+                    func.call(root, routes, queries);
+                }
+            });
+
+        },
+
+        addChildren: function() {
+            var root = this;
+            _.each(this.children, function(child, name) {
+                root.layout[name].insert(child);
+            });
         }
     });
 
     return Composer;
 })();
-
 Tendon.JsonpCollection = (function(o) {
     'use strict';
     
