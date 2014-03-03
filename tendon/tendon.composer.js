@@ -14,10 +14,10 @@ Tendon.Composer = (function(o) {
 
 			this._initListeners();
             
-            this.vein.on("render", function() {
+            this.vein.on("render", _.bind(function() {
                 this.children = options.children || this.children;
                 this.addChildren();
-            });
+            }, this));
         },
 
         _initListeners: function() {
