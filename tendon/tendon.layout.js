@@ -5,7 +5,9 @@ Tendon.Layout = (function() {
         initialize: function(options) {
             Tendon.View.prototype.initialize.call(this, options);
 
-            this.initLayout(this.layout || this.options.layout)
+            this.vein.on("render", _.bind(function() {
+                this.initLayout(this.layout || this.options.layout)
+            }, this));
         },
 
         initLayout: function(layout) {
