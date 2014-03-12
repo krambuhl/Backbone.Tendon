@@ -41,14 +41,23 @@ Tendon.Composer = (function(o) {
                 }
             });
 
+            this.vein.on("route:known", function(routes, queries) {
+                var func = root.options.onKnownRoute || root.onKnownRoute;
+
+                if (_.isFunction(func)) {
+                    func.call(root, routes, queries);
+                }
+            });
+
         },
 
         addChildren: function() {
             var root = this;
             _.each(this.children, function(child, name) {
+                var newLayout = _.result(root.children, name);
                 if (root.layout[name]) {
-                    root.layout[name].insert(child);
-                } else { }
+                    root.layout[name].insert(newLayout);
+                }
             });
         }
     });
