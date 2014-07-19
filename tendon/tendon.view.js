@@ -57,6 +57,7 @@ Tendon.View = (function() {
 
         initUI: function(ui) {
             var root = this;
+            this._ui = ui;
             this.ui = (function() {
                 var elements = {};
                 for (var el in ui) {
